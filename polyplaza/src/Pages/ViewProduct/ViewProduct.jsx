@@ -9,6 +9,9 @@ import CreateReview from "./components/CreateReview"
 import CartButton from "./components/CartButton"
 import { Star, Package, Store, ChevronDown, ChevronUp, Box } from "lucide-react"
 import ProductPriceHistoryLineChart from "./components/PriceHistory"
+import ProductMonthlyStats from "./components/ProductMonthlyStats"
+
+
 
 function ViewProduct() {
   const [item, setItem] = useState([])
@@ -189,6 +192,9 @@ function ViewProduct() {
 
               {/* Price History */}
               <ProductPriceHistoryLineChart productId={productId} />
+      
+{/* Monthly Sales & Revenue */}
+<ProductMonthlyStats productId={productId} />
             </div>
 
             {/* Product Details */}

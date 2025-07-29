@@ -17,6 +17,9 @@ function CreateSellerAccount() {
   const [address, setAddress] = useState(null);
   const [addressString, setAddressString] = useState(null);
 
+  const [disableSubmit, setDisableSubmit] = useState(false);
+
+  // Fetch latest application on load
   useEffect(() => {
     async function fetchLatestApplication() {
       const { data, error } = await supabase
@@ -34,10 +37,16 @@ function CreateSellerAccount() {
 
       if (data) {
         setApplicationStatus(data.status);
-        if (data.status === "pending") {
+        if (data.status === "Pending") {
           setErrorMessage("Your latest application is pending, please wait for approval.");
-        } else if (data.status === "rejected") {
+          setDisableSubmit(true);
+        } else if (data.status === "Rejected") {
           setErrorMessage("Your application was rejected. You may reapply.");
+        } else if (data.status === "Approved") {
+          setSuccessMessage("Your seller application has been approved!");
+          setErrorMessage("");
+        } else {
+          setErrorMessage("");
         }
       }
     }
@@ -46,6 +55,13 @@ function CreateSellerAccount() {
       fetchLatestApplication();
     }
   }, [userId]);
+
+  // Clear success message if user changes input
+  useEffect(() => {
+    if (sellerName || validIdURL || address) {
+      setSuccessMessage("");
+    }
+  }, [sellerName, validIdURL, address]);
 
   const handleSubmit = async () => {
     setErrorMessage("");
@@ -75,6 +91,7 @@ function CreateSellerAccount() {
 
     setSuccessMessage("Application submitted successfully! Please wait for approval.");
     setApplicationStatus("pending");
+    setErrorMessage("Your latest application is pending, please wait for approval.");
   };
 
   const isDisabled = applicationStatus === "pending";
@@ -125,8 +142,8 @@ function CreateSellerAccount() {
                 isRequired
               />
               <p className="text-left text-emerald-500 text-2xl font-bold">
-                Enter Your Address: 
-              </p>              
+                Enter Your Address:
+              </p>
               <span className="text-neutral-600">{addressString}</span>
               <AddressBook
                 address={address}
@@ -140,7 +157,7 @@ function CreateSellerAccount() {
 
           <button
             onClick={handleSubmit}
-            disabled={isDisabled || isSubmitting}
+            disabled={disableSubmit}
             className={`${
               isDisabled || isSubmitting
                 ? "bg-gray-400 cursor-not-allowed"
