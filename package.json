@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-fast-marquee": "^1.6.5",
+    "react-responsive-carousel": "^3.2.23"
+  }
+}
